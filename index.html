@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>OKR Review</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sidebar">
+    <img src="https://storage.googleapis.com/a1aa/image/29to8_FxVDSpngogOf1c7VwZxp48Ob5a4s6ep5pzVF8.jpg" width="40" height="40" alt="Logo" />
+    <div class="icon-group">
+      <i class="fas fa-home"></i>
+      <i class="fas fa-search"></i>
+      <i class="fas fa-tasks"></i>
+      <i class="fas fa-calendar-alt"></i>
+      <i class="fas fa-desktop"></i>
+      <i class="fas fa-question-circle"></i>
+      <i class="fas fa-users"></i>
+      <i class="fas fa-comments"></i>
+      <i class="fas fa-user"></i>
+      <i class="fas fa-envelope"></i>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="header">
+      <div class="header-left">
+        <i class="fas fa-home"></i>
+        <span>My OKRs</span>
+      </div>
+      <div class="header-right">
+        <input type="text" placeholder="Search" />
+        <i class="fas fa-bell" style="color:#6b7280;"></i>
+        <img src="https://storage.googleapis.com/a1aa/image/OKbIZmloRupFLLnb-qRB5LwrxWOrsUsdekKPGl8z6L4.jpg" alt="User Avatar" />
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="content-top">
+        <button class="btn-back">Back</button>
+        <button class="btn-submit">Next</button>
+      </div>
+
+      <div class="review-box">
+        <h2>Review</h2>
+        <div class="steps">
+          <div class="step">
+            <button class="step-circle">1</button>
+            <span>Update OKRs</span>
+          </div>
+          <div class="step">
+            <button class="step-circle">2</button>
+            <span>Add New</span>
+          </div>
+          <div class="step">
+            <button class="step-circle">3</button>
+            <span>Review</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Center -->
+      <div class="image-center">
+        <img src="https://storage.googleapis.com/a1aa/image/8IECi8UT6wr1tGEUtLO2tXxjKrv2DuGl-2EDNxURjm0.jpg" alt="Illustration"/>
+        <button class="add-okr">Add OKRs</button>
+      </div>
+
+      <!-- Registration Form -->
+      <div class="register-container">
+        <div class="register-box">
+          <h1>Add Form</h1>
+          <form class="register-form">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" placeholder="Enter Full Name" required />
+            </div>
+            <div class="form-group">
+              <label for="mobile">Mobile</label>
+              <input type="number" id="mobile" placeholder="Enter Mobile Number" required />
+            </div>
+            <div class="form-group">
+              <label for="address">Address</label>
+              <input type="text" id="address" placeholder="Enter Address" required />
+            </div>
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input type="text" id="location" placeholder="Enter Location" required />
+            </div>
+            <div class="form-group">
+              <label for="uname1">Username</label>
+              <input type="text" id="uname1" placeholder="Enter Username" required />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" placeholder="Enter Email" required />
+            </div>
+            <div class="form-group">
+              <label for="upswd1">Password</label>
+              <input type="password" id="upswd1" placeholder="Enter Password" required />
+            </div>
+            <div class="form-group">
+              <label for="upswd2">Retype Password</label>
+              <input type="password" id="upswd2" placeholder="Re-Enter Password" required />
+            </div>
+            <button class="next">Next</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Show Users -->
+      <div class="user-list"></div>
+      <div class="user-details"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

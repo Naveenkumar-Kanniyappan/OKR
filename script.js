@@ -1,166 +1,153 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let imageCenter = document.querySelector(".image-center");
-  let addOkrBtn = document.querySelector(".add-okr");
-  let registerContainer = document.querySelector(".register-container");
-  let form = document.querySelector(".register-form");
-  let userListDiv = document.querySelector(".user-list");
-  let userDetailsDiv = document.querySelector(".user-details");
-  let backBtn = document.querySelector(".btn-back");
-  let nextBtn = document.querySelector(".btn-submit");
+  let formData = document.querySelector(".register-form");
+  let userListBox = document.querySelector(".user-list");
+  let userDetailBox = document.querySelector(".user-details");
+  let okrButton = document.querySelector(".add-okr");
+  let imageBox = document.querySelector(".image-center");
+  let formBox = document.querySelector(".register-container");
+  let backButton = document.querySelector(".btn-back");
+  let nextButton = document.querySelector(".btn-submit");
 
-  // // showAllBtn.style.display = "none";
-  // userListDiv.style.display = "flex";
+  let stepCount = 1;
 
-  let currentStep = 1;
-  updateStepUI();
+  showStep();
+  loadSavedForm();
 
-  function setActiveStep(stepNumber) {
-    let steps = document.querySelectorAll(".step");
-    steps.forEach((step, index) => {
-      let circle = step.querySelector(".step-circle");
+  function showStep() {
+    imageBox.style.display = stepCount === 1 ? "flex" : "none";
+    formBox.style.display = stepCount === 2 ? "flex" : "none";
+    userListBox.style.display = stepCount === 3 ? "flex" : "none";
+
+    document.querySelectorAll(".step-circle").forEach((circle, index) => {
       circle.classList.remove("active", "completed");
-
-      if (index < stepNumber - 1) {
-        circle.classList.add("completed");
-      } else if (index === stepNumber - 1) {
-        circle.classList.add("active");
-      }
+      if (index < stepCount - 1) circle.classList.add("completed");
+      else if (index === stepCount - 1) circle.classList.add("active");
     });
   }
 
-  function updateStepUI() {
-    imageCenter.style.display = currentStep === 1 ? "flex" : "none";
-    registerContainer.style.display = currentStep === 2 ? "flex" : "none";
-    userListDiv.style.display = currentStep === 3 ? "flex" : "none";
-    setActiveStep(currentStep);
-  }
-
-  addOkrBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    currentStep = 2;
-    updateStepUI();
-    userDetailsDiv.innerHTML = "";
+  okrButton.addEventListener("click", () => {
+    stepCount = 2;
+    showStep();
   });
 
-  form.addEventListener("submit", (e) => {
+  formData.addEventListener("input", () => {
+    let data = {};
+    formData.querySelectorAll("input").forEach(input => {
+      data[input.id] = input.value;
+    });
+    sessionStorage.setItem("formTemp", JSON.stringify(data));
+  });
+
+  function loadSavedForm() {
+    let saved = sessionStorage.getItem("formTemp");
+    if (saved) {
+      let data = JSON.parse(saved);
+      for (let key in data) {
+        let input = document.getElementById(key);
+        if (input) input.value = data[key];
+      }
+    }
+  }
+
+  formData.addEventListener("submit", e => {
     e.preventDefault();
 
-    let name = document.getElementById("name").value.trim();
-    let mobile = document.getElementById("mobile").value.trim();
-    let address = document.getElementById("address").value.trim();
-    let location = document.getElementById("location").value.trim();
-    let username = document.getElementById("uname1").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let password1 = document.getElementById("upswd1").value.trim();
-    let password2 = document.getElementById("upswd2").value.trim();
+    let name = formData.name.value.trim();
+    let phone = formData.mobile.value.trim();
+    let addr = formData.address.value.trim();
+    let city = formData.location.value.trim();
+    let user = formData.uname1.value.trim();
+    let email = formData.email.value.trim();
+    let pass1 = formData.upswd1.value.trim();
+    let pass2 = formData.upswd2.value.trim();
 
-    if (!name || !mobile || !address || !location || !username || !email || !password1 || !password2) {
+    if (!name || !phone || !addr || !city || !user || !email || !pass1 || !pass2) {
       alert("Please fill in all fields.");
       return;
     }
 
-    let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert("Enter a valid email.");
       return;
     }
 
-    let phonePattern = /^\d{10}$/;
-    if (!phonePattern.test(mobile)) {
-      alert("Enter a valid 10-digit mobile number.");
+    if (!/^\d{10}$/.test(phone)) {
+      alert("Enter a valid 10-digit phone number.");
       return;
     }
 
-    if (password1 !== password2) {
+    if (pass1 !== pass2) {
       alert("Passwords do not match.");
       return;
     }
 
-    let okrData = {
-      name,
-      mobile,
-      address,
-      location,
-      username,
-      email,
-      password: password1
-    };
+    let userData = { name, phone, addr, city, user, email, password: pass1 };
+    let userList = JSON.parse(sessionStorage.getItem("userList")) || [];
+    userList.push(userData);
+    sessionStorage.setItem("userList", JSON.stringify(userList));
+    sessionStorage.removeItem("formTemp");
 
-    let okrList = JSON.parse(localStorage.getItem("okrList")) || [];
-    okrList.push(okrData);
-    localStorage.setItem("okrList", JSON.stringify(okrList));
-
-    alert("OKR saved to localStorage!");
-
-    currentStep = 3;
-    updateStepUI();
-    showAllUsers();
+    formData.reset();
+    stepCount = 3;
+    showStep();
+    showUsers();
   });
 
-  function showAllUsers() {
-    userListDiv.innerHTML = "";
-    userDetailsDiv.innerHTML = "";
+  function showUsers() {
+    userListBox.innerHTML = "";
+    userDetailBox.innerHTML = "";
+    let userList = JSON.parse(sessionStorage.getItem("userList")) || [];
 
-    let okrList = JSON.parse(localStorage.getItem("okrList")) || [];
-
-    if (okrList.length === 0) {
-      userListDiv.innerHTML = "<p>No users found.</p>";
+    if (userList.length === 0) {
+      userListBox.innerHTML = "<p>No users found.</p>";
       return;
     }
 
-    let ol = document.createElement("ol");
-    okrList.forEach(user => {
-      let li = document.createElement("li");
-      li.textContent=`${user.name}`
-      
-      let btn = document.createElement("button");
-      btn.innerHTML = `<i class="fa-solid fa-circle-chevron-down"></i>`
-      btn.className = "user-name";
-      btn.style.margin = "5px";
-      btn.style.padding = "5px 10px";
-      btn.style.cursor = "pointer";
+    let list = document.createElement("ol");
+    userList.forEach(user => {
+      let item = document.createElement("li");
+      item.textContent = user.name;
 
-      function showUserListDiv(){
+      let button = document.createElement("button");
+      button.innerHTML = `<i class="fa-solid fa-circle-chevron-down"></i>`;
+      button.className = "user-name";
+      button.style.margin = "5px";
+      button.style.padding = "5px 10px";
 
-      userDetailsDiv.innerHTML = `
-      <div style="margin-top: 10px; padding: 10px; border: 1px solid #ccc;">
-        <p><strong>Name:</strong> ${user.name}</p>
-        <p><strong>Mobile:</strong> ${user.mobile}</p>
-        <p><strong>Address:</strong> ${user.address}</p>
-        <p><strong>Location:</strong> ${user.location}</p>
-        <p><strong>Username:</strong> ${user.username}</p>
-        <p><strong>Email:</strong> ${user.email}</p>
-      </div>
-    `;
-      }
-
-      btn.addEventListener("click", () => {
-        showUserListDiv();
+      button.addEventListener("click", () => {
+        userDetailBox.innerHTML = `
+          <div style="margin-top:10px; padding:10px; border:1px solid #ccc;">
+            <p><strong>Name:</strong> ${user.name}</p>
+            <p><strong>Mobile:</strong> ${user.phone}</p>
+            <p><strong>Address:</strong> ${user.addr}</p>
+            <p><strong>Location:</strong> ${user.city}</p>
+            <p><strong>Username:</strong> ${user.user}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+          </div>`;
       });
 
-
-      ol.append(li);
-      li.append(btn);
-      userListDiv.append(ol);
-      
+      item.appendChild(button);
+      list.appendChild(item);
     });
+
+    userListBox.appendChild(list);
   }
 
-    currentStep = 3;
-    updateStepUI();
-    showAllUsers();
-
-  backBtn.addEventListener("click", () => {
-    if (currentStep > 1) {
-      currentStep--;
-      updateStepUI();
+  backButton.addEventListener("click", () => {
+    if (stepCount > 1) {
+      stepCount--;
+      showStep();
     }
   });
 
-  nextBtn.addEventListener("click", () => {
-    if (currentStep < 3) {
-      currentStep++;
-      updateStepUI();
+  nextButton.addEventListener("click", () => {
+    if (stepCount < 3) {
+      stepCount++;
+      showStep();
     }
   });
+
+  if (stepCount === 3) {
+    showUsers();
+  }
 });
